@@ -141,3 +141,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = [
     MEDIA_DIR,
 ]
+
+HASHID_FIELD_SALT = "%i&_cl!x_c23_u95q2zl@&x_kp$ed5x0hjre+^=s3qes!-svx@"
