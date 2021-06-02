@@ -27,6 +27,7 @@ class Esp8266(models.Model):
     mac  = HashidField(null=True, blank=True)
     mac_unhash = models.CharField(null=True, blank=True, max_length=50)
     updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     
     objects = Esp8266Manager()
     
