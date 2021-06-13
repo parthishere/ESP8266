@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-%i&_cl!x_c23_u95q2zl@&x_kp$ed5x0hjre+^=s3qes!-svx@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['example-nodemcu.herokuapp.com']
+ALLOWED_HOSTS = ['example-nodemcu.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'rest_framework',
     
     'index',    
 ]
@@ -143,3 +145,16 @@ MEDIA_ROOT = [
 ]
 
 HASHID_FIELD_SALT = "%i&_cl!x_c23_u95q2zl@&x_kp$ed5x0hjre+^=s3qes!-svx@"
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+}

@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
-from rest_frmaework.views import APIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
@@ -19,12 +19,22 @@ from .serializers import EspSerializer
     
 #     def post()
 
-def get_data_from_esp(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAdminUser]
+class PostDataFromEsp(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    # def get(self, request):
+    #     mac = self.mac
+    #     try:
+    #         qs=Esp8266.objects.filter(mac_id=mac,
+    #                                     timestamp__gte=(datetime.datetime.now() - datetime.timedelta(minutes=15))
+    #                                     )
+    #     except:
+    #         return Response({'Error':True,'Cause':'No Data for this sensor at this time'})
+    #     obj = EspSerializer(qs, many=False)
+    #     return Response(obj.data)
     
     def post(self, request, format=None):
-        mac = request.POST.get('mac')
+        self.mac = request.POST.get('mac')
         try:
             led1 = request.POST.get('led1')
         except Exception as e:
@@ -52,11 +62,11 @@ def get_data_from_esp(APIView):
             print(e)
             pot=None
             
-        obj = Esp8266.objects.create(mac=mac, led1=led1, led2=led2, led3=led3, pot=pot)
+        obj = Esp8266.objects.create(mac=self.mac, led1=led1, led2=led2, led3=led3, pot=pot)
         
-        return_data_to_esp(request, mac=mac)
+        esp_obj = EspSerializer(obj, many=False)
         
-        return Response({ 'object': obj })
+        return Response(esp_obj.data)
     
             
     

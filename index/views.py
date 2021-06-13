@@ -32,6 +32,11 @@ def home_view(request):
         # esp_obj.led4 = led4
         # esp_obj.pot = pot
         
+        context['led1'] = led1
+        context['led2'] = led2
+        context['led3'] = led3
+        context['led4'] = led4
+        context['mac'] = mac
         
         # esp_obj.save()
         

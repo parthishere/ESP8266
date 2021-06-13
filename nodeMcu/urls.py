@@ -14,11 +14,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from index import views
+from rest_framework.schemas import get_schema_view
+from rest_framework.documentation import include_docs_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_view, name='home')
+    path('home', views.home_view, name='home'),
+    path('api/', include('index.api.urls', namespace='index-api')),
+    path('schema/', get_schema_view(
+        title="Esp-API",
+        description="API for the Esp.dev",
+        version="1.0.0"
+    ), name="esp-schema"),
+    path('', include_docs_urls(
+        title="Esp-API",
+        description="API for the Esp.dev",
+    ), name="esp-docs")
 ]

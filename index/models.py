@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import timezone
 
 from hashid_field import HashidField
 
