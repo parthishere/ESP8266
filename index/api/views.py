@@ -62,6 +62,11 @@ class PostDataFromEsp(APIView):
             print(e)
             pot=None
             
+        
+        print("led1 : ", request.POST.get('led1'))
+        print("led2 : ", request.POST.get('led2'))
+        print("led3 : ", request.POST.get('led3'))
+        print("led4 : ", request.POST.get('led4'))
         obj = Esp8266.objects.create(mac=self.mac, led1=led1, led2=led2, led3=led3, pot=pot)
         
         esp_obj = EspSerializer(obj, many=False)
