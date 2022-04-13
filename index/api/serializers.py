@@ -2,10 +2,13 @@ from rest_framework import serializers
 
 from index.models import Esp8266
 
-class EspSerializer(serializers.Serializer):
+from hashid_field import HashidField
+
+class EspSerializer(serializers.ModelSerializer):
+    # mac = HashidField(null=True, blank=True)
     class Meta:
         model = Esp8266
-        fields = '__all__'
+        exclude = ['mac']
         
     # def create(self, validated_data):
     #     Esp8266.objects.create(pot=validated_data['pot'])
