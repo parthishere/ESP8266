@@ -1,12 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
-    
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Esp8266
 
 
 # Create your views here.
 
+@csrf_exempt
 def home_view(request):
     led1 = None
     led2 = None
@@ -22,6 +23,7 @@ def home_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        print(request.POST)
         
         led1 = request.POST.get('status')
         led2 = request.POST.get('station')
@@ -49,7 +51,7 @@ def home_view(request):
         
         # context['object'] = esp_obj
         print("hii")
-        return HttpResponse("i got post data", led1, led2, led3, led4, pot, mac)
+        return HttpResponse("i got post data {} {} {} {} {} {}".format(led1, led2, led3, led4, pot, mac))
     
     
     return render(request, 'index/index.html', context=context)
