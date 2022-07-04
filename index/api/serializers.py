@@ -15,7 +15,7 @@ class EspSerializer(serializers.ModelSerializer):
     #     pass
     
     
-class AppliencesSerializer(serializers.ModelSerializers):
+class AppliencesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Esp8266
         fields = "__all__"

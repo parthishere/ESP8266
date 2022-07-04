@@ -23,7 +23,11 @@ def home_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(request.POST)
+        print(request.POST.get("api_key"))
+        print(request.POST.get('sensor'))
+        print(request.POST.items())
+        for key, item in request.POST.items():
+            print(key, item)
         
         led1 = request.POST.get('status')
         led2 = request.POST.get('station')
@@ -32,7 +36,7 @@ def home_view(request):
         pot = request.POST.get('led1')
         mac = request.POST.get('mac')
         mac_unhashed = request.POST.get('mac')
-        print('mac')
+        # print('mac')
         
         # esp_obj = Esp8266.objects.create(mac=mac, mac_unhashed=mac)
         # esp_obj.led1 = led1
