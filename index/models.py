@@ -85,6 +85,20 @@ def user_post_save_receiver(sender, instance, *args, **kwargs):
         pass
 
 post_save.connect(User, user_post_save_receiver)
+
+
+def applience_post_save_receiver(sender, instance, *args, **kwargs):
+    esp = instance.esp
+    count = Applience.objects.filter(esp=esp).count()
+    if count > 6:
+        return 
+    if instance.boolean == True:
+        if instance.value>0:
+            instance.value=0
+    instance.save()
+    
+post_save.connect(Applience, applience_post_save_receiver)
+    
     
     
     

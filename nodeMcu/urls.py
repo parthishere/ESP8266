@@ -23,7 +23,7 @@ from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home', views.home_view, name='home'),
+    path('home/', views.home_view, name='home'),
     path('api/', include('index.api.urls', namespace='index-api')),
     path('schema/', get_schema_view(
         title="Esp-API",

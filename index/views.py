@@ -1,9 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 import json
 from .models import Esp8266
-
+from .forms import SaveForm
 
 # Create your views here.
 
@@ -18,44 +19,24 @@ def home_view(request):
     context = { }
         
     if request.method == 'GET':
+        print("GET :")
+        print(request.GET.get('uqid'))
+        print(request.GET.get('username'))
+        
         return HttpResponse("i got get request")
     
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        print(request.POST.get("api_key"))
-        print(request.POST.get('sensor'))
-        print(request.POST.items())
-        for key, item in request.POST.items():
-            print(key, item)
+        print("Post request and post data: ")
+        print(request.GET.get('uqid'))
+        print(request.GET.get('username'))
+
+        data = SaveForm(request.POST)
+        print(data.is_valid())
+        print(data.cleaned_data)
         
-        led1 = request.POST.get('status')
-        led2 = request.POST.get('station')
-        led3 = request.POST.get('led1')
-        led4 = request.POST.get('led1')
-        pot = request.POST.get('led1')
-        mac = request.POST.get('mac')
-        mac_unhashed = request.POST.get('mac')
-        # print('mac')
         
-        # esp_obj = Esp8266.objects.create(mac=mac, mac_unhashed=mac)
-        # esp_obj.led1 = led1
-        # esp_obj.led2 = led2
-        # esp_obj.led3 = led3
-        # esp_obj.led4 = led4
-        # esp_obj.pot = pot
-        
-        context['led1'] = led1
-        context['led2'] = led2
-        context['led3'] = led3
-        context['led4'] = led4
-        context['mac'] = mac
-        
-        # esp_obj.save()
-        
-        # context['object'] = esp_obj
-        print("hii")
-        return HttpResponse("i got post data {} {} {} {} {} {}".format(led1, led2, led3, led4, pot, mac))
+        payload = json.dumps({"led1":"ON", "led2": "OFF"})
+        return HttpResponse(payload)
     
     
     return render(request, 'index/index.html', context=context)
