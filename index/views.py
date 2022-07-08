@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from index.api.serializers import AppliencesSerializer
-from .models import Applience, Esp8266
+from .models import Applience, Esp8266, User, UserProfile
 from .forms import SaveForm
 
 # Create your views here.
@@ -23,24 +23,31 @@ def home_view(request):
         
     if request.method == 'GET':
         print("GET :")
-        uqid = request.GET.get('uqid')
-        username = request.GET.get('username')
+        uqid = str(request.GET.get('uqid', "")).strip()
+        username = str(request.GET.get('username', "")).strip()
         
-        esp = Esp8266.objects.get(unique_id=uqid, user__user__username=username)
-        appliences = Applience.objects.filter(esp=esp).order_by('-id')
-        AppliencesSerializer(appliences, many=True)
+        print(username)
+        user = User.objects.get(username=username)
+        # print(user)
+        
+        # esp = Esp8266.objects.get(unique_id=uqid, user__user = user)
+        # print(esp)
+        # appliences = Applience.objects.filter(esp=esp).order_by('-id')
+        # AppliencesSerializer(appliences, many=True)
         return HttpResponse(AppliencesSerializer.data)
     
     if request.method == 'POST':
         print("Post request and post data: ")
-        print(request.GET.get('uqid'))
-        print(request.GET.get('username'))
 
         data = SaveForm(request.POST)
         print(data.is_valid())
         print(data.cleaned_data)
+        username = data.cleaned_data.get('username')
+        user = User.objects.get(username=username)
+        print(user)
+        esp = Esp8266.objects.get(user__user = user)
         
-        
+        print(esp)
         payload = json.dumps({"led1":"ON", "led2": "OFF"})
         return HttpResponse(payload)
     

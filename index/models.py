@@ -56,7 +56,7 @@ class Esp8266(models.Model):
     objects = Esp8266Manager()
     
     def __str__(self):
-        return str(self.pk)
+        return f"esp {str(self.pk)}"
     
     
 class Applience(models.Model):
@@ -67,7 +67,7 @@ class Applience(models.Model):
     unique_id = models.CharField(null=True, blank=True, max_length=120) 
     
     def __str__(self):
-        return str("applience of {self.esp.unique_id}")
+        return str(f"applience of {self.esp.unique_id}")
     
     
 class ChangeTime(models.Model):
