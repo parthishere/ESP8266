@@ -1,9 +1,12 @@
+from enum import unique
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import json
-from .models import Esp8266
+
+from index.api.serializers import AppliencesSerializer
+from .models import Applience, Esp8266
 from .forms import SaveForm
 
 # Create your views here.
@@ -20,10 +23,13 @@ def home_view(request):
         
     if request.method == 'GET':
         print("GET :")
-        print(request.GET.get('uqid'))
-        print(request.GET.get('username'))
+        uqid = request.GET.get('uqid')
+        username = request.GET.get('username')
         
-        return HttpResponse("i got get request")
+        esp = Esp8266.objects.get(unique_id=uqid, user__user__username=username)
+        appliences = Applience.objects.filter(esp=esp).order_by('-id')
+        AppliencesSerializer(appliences, many=True)
+        return HttpResponse(AppliencesSerializer.data)
     
     if request.method == 'POST':
         print("Post request and post data: ")

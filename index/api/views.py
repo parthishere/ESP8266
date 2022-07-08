@@ -33,8 +33,11 @@ def return_data_to_esp_view(request):
     serializer = AppliencesSerializer(appliences, many=True)
     return Response(serializer.data)
 
+from django.views.decorators.csrf import csrf_exempt
+
 
 @api_view(['POST', 'PUT', 'PATCH'])
+@csrf_exempt
 def get_posted_data_from_esp(request):
     message = {}
     
@@ -44,7 +47,28 @@ def get_posted_data_from_esp(request):
     unique_id = request.params.get('unique_id')
     username = request.params.get('username')
     
-    form.validated_data.get('psd')
+    password = form.validated_data.get('password')
+    D0 = form.validated_data.get('D0')
+    D1 = form.validated_data.get('D1')
+    D2 = form.validated_data.get('D2')
+    D3 = form.validated_data.get('D3')
+    D4 = form.validated_data.get('D4')
+    D5 = form.validated_data.get('D5')
+    A0 = form.validated_data.get('A0')
+    
+    try:
+        esp = Esp8266.objects.get(user__username=username, unique_id=unique_id)
+        
+        appliences = Applience.objects.filter(esp=esp).order_by("-id")
+    except:
+        message = {"error": "404", "data": "Object not found !"}
+        return Response(message)
+    
+    print(appliences)
+    
+    return Response("Got the data")
+    
+        
     
     
     
