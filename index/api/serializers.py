@@ -17,8 +17,9 @@ class EspSerializer(serializers.ModelSerializer):
     
 class AppliencesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Esp8266
+        model = Applience
         fields = "__all__"
+        depth = 3
         
 class ChangeTimeSerializer(serializers.ModelSerializer):
     class Meta:
