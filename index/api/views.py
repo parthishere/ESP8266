@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import APIView
@@ -74,7 +75,86 @@ def get_posted_data_from_esp(request):
     return Response(appliences)
     
         
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, DestroyAPIView
     
+    
+    
+class ESPListCreateAPI(ListCreateAPIView):
+    queryset = Esp8266.objects.all()
+    serializer_class = EspSerializer
+    permission_classes = [IsAuthenticated,]
+    lookup_field = ['unique_id']
+    lookup_url_kwarg = ['unique_id']
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def list(self, request):
+        queryset = self.get_queryset().filter(user=request.user.user_profile)
+        serializer = EspSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+class ESPRetriveUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = Esp8266.objects.all()
+    serializer_class = EspSerializer
+    permission_classes = [IsAuthenticated]
+    
+    
+    def perform_update(self, serializer):
+        instance = serializer.save(user=self.request.user.user_profile)
+               
+class ESPDestroyAPIView(DestroyAPIView):
+    queryset = Esp8266.objects.all()
+    serializer_class = EspSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_destroy(self, instance):
+        if self.request.user == instance.user.user:
+            instance.delete()
+            
+            
+            
+            
+            
+class ListAppliencesAPI(ListCreateAPIView):
+    queryset = Applience.objects.all()
+    serializer_class = AppliencesSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = ['unique_id', 'pk']
+    
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+class AppliencesRetriveUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = Applience.objects.all()
+    serializer_class = AppliencesSerializer
+    permission_classes = [IsAuthenticated]
+    multiple_lookup_fields = ['unique_id', 'pk']
+    
+        
+    def get_object(self):
+        queryset = self.get_queryset().filter(user=self.request.user.user_profile)
+        filter = {}
+        for field in self.multiple_lookup_fields:
+            filter[field] = self.kwargs[field]
+
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+               
+class AppliencesDestroyAPIView(DestroyAPIView):
+    queryset = Applience.objects.all()
+    serializer_class = AppliencesSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_destroy(self, instance):
+        if self.request.user == instance.esp.user.user:
+            instance.delete()
+        
+        
+        
     
     
     

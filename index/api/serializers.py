@@ -8,11 +8,16 @@ class EspSerializer(serializers.ModelSerializer):
     # mac = HashidField(null=True, blank=True)
     class Meta:
         model = Esp8266
-        fields = "__all__"
+        exclude = ['user',]
         
-    # def create(self, validated_data):
-    #     Esp8266.objects.create(pot=validated_data['pot'])
-    #     pass
+    def create(self, validated_data):
+        
+        count = Esp8266.objects.filter(user=user_profile).count()
+        if count > 4:
+            pass
+        else:
+            Esp8266.objects.create(**validated_data) 
+            
     
     
 class AppliencesSerializer(serializers.ModelSerializer):
@@ -20,6 +25,18 @@ class AppliencesSerializer(serializers.ModelSerializer):
         model = Applience
         fields = "__all__"
         depth = 3
+        
+    def create(self, validated_data):
+        esp=validated_data.get('esp')
+        count = Applience.objects.filter(esp=esp).count()
+        if count > 6:
+            pass
+        else:
+            Applience.objects.create(**validated_data)
+            
+    def update(self, instance, validated_data):
+        esp = validated_data.pop('esp')
+        return super().update(instance, validated_data)
         
 class ChangeTimeSerializer(serializers.ModelSerializer):
     class Meta:

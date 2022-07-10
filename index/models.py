@@ -48,7 +48,7 @@ class Esp8266Manager(models.Manager):
         
         
 class Esp8266(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True, related_name='esps')
     unique_id = models.CharField(null=True, blank=True, max_length=120) 
     mac = models.CharField(null=True, blank=True, max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -60,7 +60,7 @@ class Esp8266(models.Model):
     
     
 class Applience(models.Model):
-    esp = models.ForeignKey(Esp8266, on_delete=models.CASCADE)
+    esp = models.ForeignKey(Esp8266, on_delete=models.CASCADE, related_name='appliences')
     boolean = models.BooleanField(default=True)
     name = models.CharField(default='led', max_length=120)
     value = models.IntegerField(default='0', null=True, blank=True)
@@ -71,7 +71,7 @@ class Applience(models.Model):
     
     
 class ChangeTime(models.Model):
-    Appliences = models.ForeignKey(Applience, on_delete=models.CASCADE)
+    Appliences = models.ForeignKey(Applience, on_delete=models.CASCADE, related_name='updates')
     updated_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
     def __str__(self):
