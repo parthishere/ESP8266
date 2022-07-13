@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 import random
 import string
@@ -30,3 +31,9 @@ def unique_id_generator(instance):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     unique_id = models.CharField(null=True, blank=True, max_length=120) 
+    
+def user_post_save_reciever(sender, instance, *args, **kwargs):
+    pass
+
+
+post_save.connect(user_post_save_reciever, sender=User)

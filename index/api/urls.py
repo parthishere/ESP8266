@@ -4,9 +4,9 @@ from .views import (
     
     ESPDestroyAPIView,
     ESPRetriveUpdateAPIView,
-    ListEspAPI,
+    ESPListCreateAPI,
     
-    ListAppliencesAPI,
+    ListCreateAppliencesAPI,
     AppliencesDestroyAPIView,
     AppliencesRetriveUpdateAPIView
 )
@@ -23,9 +23,9 @@ urlpatterns = [
     
     path('esp/<int:unique_id>/delete', ESPDestroyAPIView.as_view(), name='delete-esp'),
     path('esp/<int:unique_id>', ESPRetriveUpdateAPIView.as_view(), name='retrive-update-create-esp'),
-    path('esp/list', ListEspAPI.as_view(), name='list-esp'),
+    path('esp/list', ESPListCreateAPI.as_view(), name='list-esp'),
     
-    path('appliences/list', ListAppliencesAPI.as_view(), name='delete-applience'),
+    path('appliences/list', ListCreateAppliencesAPI.as_view(), name='delete-applience'),
     path('appliences/<int:pk>', AppliencesDestroyAPIView.as_view(), name='retrive-update-create-applience'),
     path('appliences/<int:unique_id>', AppliencesRetriveUpdateAPIView.as_view(), name='list-applience'),
 ]

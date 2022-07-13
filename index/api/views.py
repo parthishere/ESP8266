@@ -116,7 +116,7 @@ class ESPDestroyAPIView(DestroyAPIView):
             
             
             
-class ListAppliencesAPI(ListCreateAPIView):
+class ListCreateAppliencesAPI(ListCreateAPIView):
     queryset = Applience.objects.all()
     serializer_class = AppliencesSerializer
     permission_classes = [IsAuthenticated]
@@ -132,8 +132,7 @@ class AppliencesRetriveUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = AppliencesSerializer
     permission_classes = [IsAuthenticated]
     multiple_lookup_fields = ['unique_id', 'pk']
-    
-        
+     
     def get_object(self):
         queryset = self.get_queryset().filter(user=self.request.user.user_profile)
         filter = {}
