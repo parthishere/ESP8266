@@ -26,6 +26,6 @@ urlpatterns = [
     path('esp/list', ESPListCreateAPI.as_view(), name='list-esp'),
     
     path('appliences/list', ListCreateAppliencesAPI.as_view(), name='delete-applience'),
-    path('appliences/<int:pk>', AppliencesDestroyAPIView.as_view(), name='retrive-update-create-applience'),
-    path('appliences/<int:unique_id>', AppliencesRetriveUpdateAPIView.as_view(), name='list-applience'),
+    path('appliences/<int:pk>/delete', AppliencesDestroyAPIView.as_view(), name='retrive-update-create-applience'),
+    path('appliences/<int:pk>', AppliencesRetriveUpdateAPIView.as_view(), name='list-applience'),
 ]

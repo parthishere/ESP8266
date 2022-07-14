@@ -50,7 +50,6 @@ class Esp8266Manager(models.Manager):
 class Esp8266(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True, related_name='esps')
     unique_id = models.CharField(null=True, blank=True, max_length=120) 
-    mac = models.CharField(null=True, blank=True, max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
     objects = Esp8266Manager()
