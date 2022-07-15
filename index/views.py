@@ -1,7 +1,8 @@
 from enum import unique
+import re
 from django.http import HttpResponse
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import json
@@ -13,48 +14,54 @@ from .forms import SaveForm
 from rest_framework.decorators import api_view
 
 # Create your views here.
+@login_required(login_url="accounts:login")
+def home(request):
+    context = {}
+    user =request.user
+    
+    esps = Esp8266.objects.filter(user__user=user)
+    
+    applieneces = []
+    for esp in esps:
+        applienece = Applience.objects.filter(esp=esp)
+        applieneces.append(applienece)
+        
+    context['esps'] = esps
+    context['applieneces'] = applieneces
+    return render(request, "index/home.html", context)
 
-@csrf_exempt
-@api_view(["GET", "POST"])
-def home_view(request):
-    led1 = None
-    led2 = None
-    led3 = None
-    led4 = None
-    pot = None
+@login_required(login_url="accounts:login")
+def esp_detail(request, uqid):
+    context = {}
     
-    context = { }
-        
-    if request.method == 'GET':
-        print("GET :")
-        uqid = str(request.GET.get('uqid', "")).strip()
-        username = str(request.GET.get('username', "")).strip()
-        
-        print(username)
-        user = User.objects.get(username=username)
-        print(user)
-        
-        esp = Esp8266.objects.get(unique_id=uqid, user__user = user)
-        print(esp)
-        appliences = Applience.objects.filter(esp=esp).order_by('-id')
-        print(appliences)
-        # AppliencesSerializer(appliences, many=True)
-        return Response(AppliencesSerializer.data)
+    user =request.user
+    esp = Esp8266.objects.get(unique_id=uqid)
     
-    if request.method == 'POST':
-        print("Post request and post data: ")
+    context['esp'] = esp
+    context['applieneces'] = Applience.objects.filter(esp=esp)
+    return render(request, 'index/esp-detail.html', context)
 
-        data = SaveForm(request.POST)
-        print(data.is_valid())
-        print(data.cleaned_data)
-        username = data.cleaned_data.get('username')
-        user = User.objects.get(username=username)
-        print(user)
-        esp = Esp8266.objects.get(user__user = user)
-        
-        print(esp)
-        payload = json.dumps({"led1":"ON", "led2": "OFF"})
-        return Response(payload)
-    
-    
-    return render(request, 'index/index.html', context=context)
+
+def update_applience(request, pk=None):
+    context = {}
+    if request.POST:
+        user = request.user
+        appliance = Applience.objects.get(pk=pk)
+    return render(request, '', context)
+
+
+def profile(request):
+    context  = {}
+    return render(request, "index/profile.html", context)
+
+def update_profile(request):
+    context  = {}
+    return render(request, "profile.html", context)
+
+def update_esp(request):
+    context  = {}
+    return render(request, "profile.html", context)
+
+def delete_esp(request):
+    return redirect("index:home")
+

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% for esp in esps%}
+{{ esp }}
+{% endfor %}
+
+<br>
+
+
+<br>
+<hr>
+{% for app in applieneces%}
+<br>
+{% for a in app %}
+{{ a }}<span> &nbsp </span>
+{{ a.name }}<br>
+{% endfor %}
+<hr>
+<br>
+{% endfor %}
+
+{% endblock %}

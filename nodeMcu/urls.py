@@ -16,14 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 
-from index import views
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
+
+from index.api.views import MyTokenObtainPairView
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^home/$', views.home_view, name='home'),
+    path('accounts/', include('allauth.urls')),
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('site/', include('index.urls', namespace='index')),
     path('api/', include('index.api.urls', namespace='index-api')),
     path('schema/', get_schema_view(
         title="Esp-API",
@@ -33,5 +42,6 @@ urlpatterns = [
     path('', include_docs_urls(
         title="Esp-API",
         description="API for the Esp.dev",
-    ), name="esp-docs")
+    ), name="esp-docs"),
+
 ]
